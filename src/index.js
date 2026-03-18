@@ -22,6 +22,11 @@ app.use("/api", userRoutes);
 // error handling middleware
 app.use(errorHandler)
 
+// create user table if not exist
+
+createUserTable();
+
+
 // testing POSTGRESS Connection
 app.get('/', async (req, res) => {
     console.log("START")
