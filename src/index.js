@@ -1,14 +1,15 @@
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
+
 import pool from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
 import errorHandler from "./middlewares/errorHandler.js";
+import createUserTable from "./data/createUserTable.js";
 
-dotenv.config();
+
 
 const app = express();
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT || 5001
 
 
 // Middleware
@@ -19,12 +20,9 @@ app.use(cors());
 app.use("/api", userRoutes);
 
 
-// error handling middleware
-app.use(errorHandler)
-
 // create user table if not exist
 
-createUserTable();
+
 
 
 // testing POSTGRESS Connection
@@ -35,7 +33,12 @@ app.get('/', async (req, res) => {
     console.log("END")
 });
 
+
+// error handling middleware
+app.use(errorHandler)
+
 // server running
-app.listen(PORT , () => {
+app.listen(PORT , async () => {
+    await createUserTable();
     console.log(`Server is running on port ${PORT}`);
 })

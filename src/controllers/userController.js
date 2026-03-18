@@ -10,33 +10,38 @@ const handleResponse = (res, status, message, data = null) => {
   });
 };
 
-export const createUser = (req, res, next) => {
+export const createUser = async (req, res, next) => {
   // logic to create a user
   const { name, email } = req.body;
   try {
-    const newUser = createUserService(name, email);
+    const newUser = await createUserService(name, email);
     handleResponse(res, 201, "User created successfully", newUser);
   } catch (err) {
     handleResponse(res, 500, "Error creating user", null);
+    next(err); 
   }
 };
 
-export const getUsers = (req, res) => {
+export const getUsers = async (req, res, next) => {
   // logic to get all users
+   console.log("getUsers called!")  // ← add this
   try {
-    const users = getAllUsersService();
+    const users = await getAllUsersService();
+     console.log("Users from DB:", users)  // ← add this
+    console.log("Type:", typeof users)    //
     handleResponse(res, 200, "Users retrieved successfully", users);
   } catch (err) {
     handleResponse(res, 500, "Error retrieving users", null);
+    next(err);
   }
 };
 
-export const getUserById = (req, res) => {
+export const getUserById = async(req, res) => {
   // logic to get a user by id
   const { id } = req.params;
   // Implement logic to get user by id
   try {
-    const user = getUserByIdService(id);
+    const user =  await getUserByIdService(id);
     if (!user) return handleResponse(res, 404, "User not found", null);
     handleResponse(res, 200, "User retrieved successfully", user);
   } catch (err) {

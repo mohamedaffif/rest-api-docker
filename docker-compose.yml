@@ -1,5 +1,10 @@
 services:
   postgres-db:
+    healthcheck: 
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s 
+      retries: 5
     image: postgres:latest
     container_name: postgres-db
     restart: always
@@ -21,7 +26,8 @@ services:
     ports:
       - "5001:5001"
     depends_on:
-      - postgres-db
+      postgres-db: 
+        condition: service_healthy
     command: npm run dev # or node src/index.js
     networks:
        - backend-network    # ← can talk to database
