@@ -1,6 +1,6 @@
 // returning standardized responses function
 
-import { createUserService, deleteUserService, getAllUsersService, updateUserService } from "../models/userModel.js";
+import { createUserService, deleteUserService, getAllUsersService, getUserByIdService, updateUserService } from "../models/userModel.js";
 
 const handleResponse = (res, status, message, data = null) => {
   res.status(status).json({
@@ -15,6 +15,7 @@ export const createUser = async (req, res, next) => {
   const { name, email } = req.body;
   try {
     const newUser = await createUserService(name, email);
+     console.log("New user:", newUser)
     handleResponse(res, 201, "User created successfully", newUser);
   } catch (err) {
     handleResponse(res, 500, "Error creating user", null);
@@ -24,11 +25,10 @@ export const createUser = async (req, res, next) => {
 
 export const getUsers = async (req, res, next) => {
   // logic to get all users
-   console.log("getUsers called!")  // ← add this
+  
   try {
     const users = await getAllUsersService();
-     console.log("Users from DB:", users)  // ← add this
-    console.log("Type:", typeof users)    //
+       
     handleResponse(res, 200, "Users retrieved successfully", users);
   } catch (err) {
     handleResponse(res, 500, "Error retrieving users", null);
@@ -38,6 +38,7 @@ export const getUsers = async (req, res, next) => {
 
 export const getUserById = async(req, res) => {
   // logic to get a user by id
+  console.log("Getting user by ID:", req.params.id); // 
   const { id } = req.params;
   // Implement logic to get user by id
   try {

@@ -6,6 +6,7 @@ export const getAllUsersService = async () => {
 };
 
 export const getUserByIdService = async (id) => {
+  
   const result = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
   return result.rows[0];
 };
@@ -15,6 +16,8 @@ export const createUserService = async (name, email) => {
     "INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *",
     [name, email],
   );
+  console.log("Result:", result.rows); // ← add this
+  console.log("Row 0:", result.rows[0]);
   return result.rows[0];
 };
 
